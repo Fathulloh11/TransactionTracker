@@ -36,12 +36,13 @@ namespace MyExpenseTracker.Models
         [JsonProperty("note")]
         public string Note { get; set; }
 
-        [ForeignKey("User")]
+        [Required]
         [Column("user_id")]
         [JsonProperty("userId")]
+        [ForeignKey("UserId")]
         public int UserId { get; set; }
-
-        [JsonIgnore] 
-        public User User { get; set; }
+        
+        [JsonIgnore]
+        public virtual User User { get; set; }
     }
 }

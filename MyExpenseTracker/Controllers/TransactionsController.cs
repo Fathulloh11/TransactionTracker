@@ -13,7 +13,10 @@ public class TransactionsController : ControllerBase
 {
     private readonly ITransactionService _service;
 
-    public TransactionsController(ITransactionService service) => _service = service;
+    public TransactionsController(ITransactionService service)
+    {
+        _service = service;
+    }
 
     private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -24,13 +27,27 @@ public class TransactionsController : ControllerBase
         return Ok(list);
     }
 
-
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Transaction trx)
+    public async Task<IActionResult> Create(Transaction trx)
     {
         trx.UserId = GetUserId();
         var result = await _service.CreateAsync(trx);
         return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] Transaction trx)
+    {
+        if (id != trx.Id)
+            return BadRequest("ID mismatch");
+
+        trx.UserId = GetUserId();
+
+        var updated = await _service.UpdateAsync(id, trx);
+        if (updated == null)
+            return NotFound();
+
+        return Ok(updated);
     }
 
     [HttpDelete("{id}")]

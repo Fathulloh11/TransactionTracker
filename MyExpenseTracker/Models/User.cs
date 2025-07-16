@@ -19,8 +19,10 @@ namespace MyExpenseTracker.Models
 
         [Required]
         [Column("password")]
-        [JsonProperty("password")]
+        [JsonIgnore]
         public string Password { get; set; }
-
+        
+        [JsonIgnore]
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }
