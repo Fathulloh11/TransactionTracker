@@ -21,6 +21,8 @@ namespace MyExpenseTracker.Models
         [Column("password")]
         [JsonProperty("password")]
         public string Password { get; set; }
-
+        
+        
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

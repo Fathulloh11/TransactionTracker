@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyExpenseTracker.Models;
 using MyExpenseTracker.Services.Interfaces;
+using LoginRequest = MyExpenseTracker.Request.LoginRequest;
+using RegisterRequest = MyExpenseTracker.Request.RegisterRequest;
 
 namespace MyExpenseTracker.Controllers;
 
@@ -12,7 +13,7 @@ public class AuthController : ControllerBase
     public AuthController(IAuthService authService) => _authService = authService;
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] User request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             return BadRequest("Username and password are required.");
@@ -22,7 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] User request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             return BadRequest("Username and password are required.");

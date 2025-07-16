@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyExpenseTracker.Data;
-using MyExpenseTracker.Services.Interfaces;
 using MyExpenseTracker.Models;
+using MyExpenseTracker.Services.Interfaces;
 
 namespace MyExpenseTracker.Services.Implementations
 {
     public class TransactionService : ITransactionService
     {
         private readonly AppDbContext _context;
+
         public TransactionService(AppDbContext context)
         {
             _context = context;
@@ -27,7 +28,7 @@ namespace MyExpenseTracker.Services.Implementations
         public async Task<bool> DeleteAsync(int id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
-            if (transaction ==null) return false;
+            if (transaction == null) return false;
 
             _context.Transactions.Remove(transaction);
             await _context.SaveChangesAsync();
@@ -36,12 +37,14 @@ namespace MyExpenseTracker.Services.Implementations
 
         public async Task<IEnumerable<Transaction>> GetAllAsync()
         {
-            return await _context.Transactions.ToListAsync();
+            return await _context.Transactions
+                .ToListAsync();
         }
 
         public async Task<Transaction?> GetByIdAsync(int id)
         {
-            return await _context.Transactions.FindAsync(id);
+            return await _context.Transactions
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<IEnumerable<Transaction>> GetByUserIdAsync(int userId)
@@ -62,7 +65,5 @@ namespace MyExpenseTracker.Services.Implementations
             await _context.SaveChangesAsync();
             return existing;
         }
-
     }
 }
- 
