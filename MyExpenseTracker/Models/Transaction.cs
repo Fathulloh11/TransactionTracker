@@ -42,7 +42,7 @@ namespace MyExpenseTracker.Models
         [ForeignKey("UserId")]
         public int UserId { get; set; }
         
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public virtual User User { get; set; }
     }
 }

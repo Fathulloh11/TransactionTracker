@@ -14,13 +14,13 @@ namespace MyExpenseTracker.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet("monthly")]
+        [HttpGet("monthly")] 
         public async Task<IActionResult> GetMonthlyReport()
         {
             var report = await _reportService.GetMonthlyReportAsync();
             if (report == null)
             {
-                return NotFound("Monthly report not    found.");
+                return NotFound("Monthly report not found.");
             }
             return Ok(report);
         }
