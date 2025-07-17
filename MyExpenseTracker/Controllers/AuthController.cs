@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyExpenseTracker.Models;
 using MyExpenseTracker.Services.Interfaces;
 using MyExpenseTracker.DTOs;
 
