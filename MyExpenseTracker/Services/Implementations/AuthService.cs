@@ -3,6 +3,7 @@ using MyExpenseTracker.Data;
 using MyExpenseTracker.Helpers;
 using MyExpenseTracker.Models;
 using MyExpenseTracker.Services.Interfaces;
+using MyExpenseTracker.DTOs;
 
 namespace MyExpenseTracker.Services.Implementations
 {
@@ -15,24 +16,24 @@ namespace MyExpenseTracker.Services.Implementations
             _context = context;
         }
 
-        public async Task<string?> LoginAsync(string username, string password)
+        public async Task<string?> LoginAsync(LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return null;
 
             return JwtAuthHelper.GenerateToken(user.Id.ToString());
         }
 
-        public async Task<bool> RegisterAsync(string username, string password)
+        public async Task<bool> RegisterAsync(RegisterRequest request)
         {
-            var exists = await _context.Users.AnyAsync(u => u.Username == username);
+            var exists = await _context.Users.AnyAsync(u => u.Username == request.Username);
             if (exists) return false;
 
             var user = new User
             {
-                Username = username,
-                Password = BCrypt.Net.BCrypt.HashPassword(password)
+                Username = request.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
 
             _context.Users.Add(user);

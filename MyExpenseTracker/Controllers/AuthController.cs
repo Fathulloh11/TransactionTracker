@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             return BadRequest("Username and password are required.");
 
-        var token = await _authService.LoginAsync(request.Username, request.Password);
+        var token = await _authService.LoginAsync(request);
         return token == null ? Unauthorized("Login failed.") : Ok(new { Token = token });
     }
 
@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             return BadRequest("Username and password are required.");
 
-        var success = await _authService.RegisterAsync(request.Username, request.Password);
+        var success = await _authService.RegisterAsync(request);
         return success ? Ok("User created") : BadRequest("Username already exists.");
     }
 }

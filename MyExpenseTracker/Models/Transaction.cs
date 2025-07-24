@@ -39,9 +39,9 @@ namespace MyExpenseTracker.Models
         [Required]
         [Column("user_id")]
         [JsonProperty("userId")]
-        [ForeignKey("UserId")]
         public int UserId { get; set; }
         
+        [ForeignKey("UserId")]
         [Newtonsoft.Json.JsonIgnore]
         public virtual User User { get; set; }
     }
