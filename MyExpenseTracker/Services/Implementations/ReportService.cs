@@ -20,7 +20,7 @@ namespace MyExpenseTracker.Services.Implementations
                 .Where(t => t.Date.Month == now.Month && t.Date.Year == now.Year)
                 .ToListAsync();
 
-            if (!transactions.Any())
+            if (transactions.Count == 0)
                 return null;
 
             var income = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
@@ -43,15 +43,15 @@ namespace MyExpenseTracker.Services.Implementations
             return new
             {
                 Month = now.ToString("dd/MM/yyyy"), 
-                income = income,                    
-                expenses = expenses,              
-                balance = balance,                   
+                income,                    
+                expenses,              
+                balance,                   
                 ByCategory = categorySummary,   
                MaxExpense = maxExpense == null ? null : new
                 {
-                    Amount = maxExpense.Amount,             
+                    maxExpense.Amount,             
                     Category = maxExpense.Category.ToString(),
-                    Note = maxExpense.Note,
+                    maxExpense.Note,
                     Date = maxExpense.Date.ToShortDateString() 
                 }
             };

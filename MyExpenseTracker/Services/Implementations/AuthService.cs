@@ -12,12 +12,13 @@ namespace MyExpenseTracker.Services.Implementations
         private readonly AppDbContext _context;
 
         public AuthService(AppDbContext context)
-        {
-            _context = context;
-        }
+            => _context = context;
 
         public async Task<string?> LoginAsync(LoginRequest request)
         {
+            request.Username = request.Username.ToLower();
+            request.Password = request.Password.Trim();
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return null;
@@ -27,16 +28,13 @@ namespace MyExpenseTracker.Services.Implementations
 
         public async Task<bool> RegisterAsync(RegisterRequest request)
         {
+            request.Username = request.Username.ToLower();
+            request.Password = request.Password.Trim();
+
             var exists = await _context.Users.AnyAsync(u => u.Username == request.Username);
             if (exists) return false;
 
-            var user = new User
-            {
-                Username = request.Username,
-                Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
-            };
-
-            _context.Users.Add(user);
+            _context.Users.Add(new User(request.Username, BCrypt.Net.BCrypt.HashPassword(request.Password)));
             await _context.SaveChangesAsync();
             return true;
         }

@@ -41,61 +41,13 @@ public class TransactionsController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] TransactionCreateDto trxDto)
-    {
-        var trx = new Transaction
-        {
-            Date = trxDto.Date,
-            Amount = trxDto.Amount,
-            Type = trxDto.Type,
-            Category = trxDto.Category,
-            Note = trxDto.Note,
-            UserId = GetUserId()
-        };
-
-        var result = await _service.CreateAsync(trx);
-
-        var dto = new TransactionReadDto
-        {
-            Id = result.Id,
-            Date = result.Date,
-            Amount = result.Amount,
-            Type = result.Type,
-            Category = result.Category,
-            Note = result.Note
-        };
-
-        return Ok(dto);
-    }
+        => Ok(_service.CreateAsync(trxDto, GetUserId()));
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] TransactionCreateDto trxDto)
     {
-        var trx = new Transaction
-        {
-            Id = id,
-            Date = trxDto.Date,
-            Amount = trxDto.Amount,
-            Type = trxDto.Type,
-            Category = trxDto.Category,
-            Note = trxDto.Note,
-            UserId = GetUserId()
-        };
-
-        var updated = await _service.UpdateAsync(id, trx);
-        if (updated == null)
-            return NotFound();
-
-        var dto = new TransactionReadDto
-        {
-            Id = updated.Id,
-            Date = updated.Date,
-            Amount = updated.Amount,
-            Type = updated.Type,
-            Category = updated.Category,
-            Note = updated.Note
-        };
-
-        return Ok(dto);
+        var updated = await _service.UpdateAsync(id, trxDto);
+        return Update == null ? NotFound() : Ok(updated);
     }
 
     [HttpDelete("{id}")]

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyExpenseTracker.Data;
+using MyExpenseTracker.DTOs;
+using MyExpenseTracker.Extensions;
 using MyExpenseTracker.Models;
 using MyExpenseTracker.Services.Interfaces;
 
@@ -25,6 +27,19 @@ namespace MyExpenseTracker.Services.Implementations
             return transaction;
         }
 
+        public async Task<TransactionReadDto> CreateAsync(TransactionCreateDto request, int userId)
+        {
+            var transaction = request.ToTransaction(userId);
+            var userExists = await _context.Users.AnyAsync(u => u.Id == transaction.UserId);
+            if (!userExists)
+                throw new Exception("User does not exist.");
+
+            _context.Transactions.Add(transaction);
+            await _context.SaveChangesAsync();
+
+            return transaction.ToTransactionResponse();
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
@@ -36,10 +51,7 @@ namespace MyExpenseTracker.Services.Implementations
         }
 
         public async Task<IEnumerable<Transaction>> GetAllAsync()
-        {
-            return await _context.Transactions
-                .ToListAsync();
-        }
+            => await _context.Transactions.ToListAsync();
 
         public async Task<Transaction?> GetByIdAsync(int id)
         {
@@ -56,14 +68,33 @@ namespace MyExpenseTracker.Services.Implementations
 
         public async Task<Transaction?> UpdateAsync(int id, Transaction transaction)
         {
-            if (id != transaction.Id) return null;
+            if (id != transaction.Id) 
+                return null;
 
             var existing = await _context.Transactions.FindAsync(id);
-            if (existing == null) return null;
+            if (existing == null) 
+                return null;
 
             _context.Entry(existing).CurrentValues.SetValues(transaction);
             await _context.SaveChangesAsync();
             return existing;
+        }
+
+        public async Task<TransactionReadDto?> UpdateAsync(int id, TransactionCreateDto request)
+        {
+            var transaction = request.ToTransaction(id);
+
+            if (id != transaction.Id)
+                return null;
+
+            var existing = await _context.Transactions.FindAsync(id);
+            if (existing == null)
+                return null;
+
+            _context.Entry(existing).CurrentValues.SetValues(transaction);
+            await _context.SaveChangesAsync();
+
+            return transaction.ToTransactionResponse();
         }
     }
 }
