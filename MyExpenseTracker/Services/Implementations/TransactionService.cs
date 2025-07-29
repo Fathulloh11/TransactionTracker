@@ -12,10 +12,8 @@ namespace MyExpenseTracker.Services.Implementations
         private readonly AppDbContext _context;
 
         public TransactionService(AppDbContext context)
-        {
-            _context = context;
-        }
-
+            =>_context = context;
+        
         public async Task<Transaction> CreateAsync(Transaction transaction)
         {
             var userExists = await _context.Users.AnyAsync(u => u.Id == transaction.UserId);

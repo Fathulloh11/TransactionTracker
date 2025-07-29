@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyExpenseTracker.Data;
-using MyExpenseTracker.Models;
+using MyExpenseTracker.Enums;
 using MyExpenseTracker.Services.Interfaces;
 
 namespace MyExpenseTracker.Services.Implementations
@@ -10,9 +9,8 @@ namespace MyExpenseTracker.Services.Implementations
     {
         private readonly AppDbContext _context;
         public ReportService(AppDbContext context)
-        {
-            _context = context;
-        }
+            =>_context = context;
+        
         public async Task<object> GetMonthlyReportAsync()
         {
             var now = DateTime.Now;
@@ -22,7 +20,7 @@ namespace MyExpenseTracker.Services.Implementations
 
             if (transactions.Count == 0)
                 return null;
-
+            
             var income = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
             var expenses = transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);    
             var balance = income - expenses;

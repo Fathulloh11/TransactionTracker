@@ -24,7 +24,8 @@ namespace MyExpenseTracker.Models
         
         [JsonIgnore]
         public virtual ICollection<Transaction> Transactions { get; set; }
-
+            
+        
         public User() { }
 
         public User(string username, string password)

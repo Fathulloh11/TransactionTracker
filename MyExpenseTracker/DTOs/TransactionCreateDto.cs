@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MyExpenseTracker.Models;
+using MyExpenseTracker.Enums;
 
 namespace MyExpenseTracker.DTOs;
 

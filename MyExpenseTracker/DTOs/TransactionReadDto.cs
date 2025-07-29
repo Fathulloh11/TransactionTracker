@@ -1,5 +1,4 @@
-﻿using MyExpenseTracker.Models;
-
+﻿using MyExpenseTracker.Enums;
 namespace MyExpenseTracker.DTOs;
 
 public class TransactionReadDto

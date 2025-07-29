@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using MyExpenseTracker.Enums;
 
 namespace MyExpenseTracker.Models
 {
